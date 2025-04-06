@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -35,6 +34,7 @@
       margin: 0;
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
     }
 
     header h1 i {
@@ -49,28 +49,30 @@
       flex-wrap: wrap;
       gap: 20px;
       justify-content: center;
+      align-items: center;
       overflow-y: auto;
     }
 
     .video-card {
-      width: 300px;
-      height: 300px;
-      background-color: #0f172a;
-      border-radius: 16px;
-      box-shadow: 0 5px 15px rgba(56, 189, 248, 0.3);
-      border: 2px solid #38bdf8;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
       position: relative;
+      background-color: #0f172a;
+      border: 2px solid #38bdf8;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(56, 189, 248, 0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .video-card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 12px 25px rgba(56, 189, 248, 0.6);
     }
 
     video {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      display: block;
     }
 
     .controls {
@@ -79,6 +81,7 @@
       display: flex;
       justify-content: center;
       gap: 20px;
+      flex-wrap: wrap;
     }
 
     .control-btn {
@@ -90,7 +93,10 @@
       height: 50px;
       font-size: 20px;
       cursor: pointer;
-      transition: 0.2s;
+      transition: 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .control-btn:hover {
@@ -109,23 +115,73 @@
       padding: 10px 20px;
       font-size: 16px;
       color: white;
-      margin-left: 20px;
-    }
-
-    #endCallBtn {
-      background-color: #ef4444;
+      width: auto;
+      height: auto;
     }
 
     #endCallBtn:hover {
       background-color: #dc2626;
+    }
+
+    /* === Responsive Media Queries === */
+    @media (max-width: 1200px) {
+      .video-card {
+        width: 350px;
+        height: 280px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .video-card {
+        width: 90vw;
+        height: 50vh;
+      }
+
+      header h1 {
+        font-size: 16px;
+      }
+
+      .control-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+      }
+
+      #endCallBtn {
+        padding: 8px 16px;
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .video-card {
+        width: 95vw;
+        height: 45vh;
+      }
+
+      header h1 {
+        font-size: 14px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .control-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+      }
+
+      #endCallBtn {
+        padding: 6px 14px;
+        font-size: 13px;
+      }
     }
   </style>
 </head>
 
 <body>
   <header>
-    <h1><i class="fas fa-user-secret"></i> Anonymous Chat Room: <%= roomId %>
-    </h1>
+    <h1><i class="fas fa-user-secret"></i> Anonymous Chat Room: <%= roomId %></h1>
   </header>
 
   <div id="video-grid"></div>
@@ -133,10 +189,7 @@
   <div class="controls">
     <button id="muteButton" class="control-btn" title="Mute/Unmute"><i class="fas fa-microphone"></i></button>
     <button id="cameraButton" class="control-btn" title="Camera On/Off"><i class="fas fa-video"></i></button>
-    <button id="endCallBtn" class="control-btn" title="End Call">
-      <i class="fas fa-phone-slash"></i>
-    </button>
+    <button id="endCallBtn" class="control-btn" title="End Call"><i class="fas fa-phone-slash"></i></button>
   </div>
 </body>
-
 </html>

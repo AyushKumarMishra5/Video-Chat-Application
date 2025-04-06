@@ -13,8 +13,6 @@ navigator.mediaDevices.getUserMedia({
 }).then(stream => {
   myStream = stream;
   addVideoStream(myVideo, stream);
-
-  // Handle incoming calls
   myPeer.on('call', call => {
     call.answer(stream);
     const video = document.createElement('video');
@@ -25,12 +23,10 @@ navigator.mediaDevices.getUserMedia({
       console.error('Error in received call:', err);
     });
   });
-
-  // Wait before trying to connect to new user (avoids black screen)
   socket.on('user-connected', userId => {
     setTimeout(() => {
       connectToNewUser(userId, stream);
-    }, 1000); // delay to ensure peer is ready
+    }, 1000);
   });
 });
 
@@ -75,8 +71,6 @@ function addVideoStream(video, stream) {
   card.appendChild(video);
   videoGrid.appendChild(card);
 }
-
-// Mute / Unmute
 document.getElementById('muteButton').addEventListener('click', () => {
   const audioTrack = myStream.getAudioTracks()[0];
   audioTrack.enabled = !audioTrack.enabled;
@@ -84,8 +78,6 @@ document.getElementById('muteButton').addEventListener('click', () => {
   icon.className = audioTrack.enabled ? 'fas fa-microphone' : 'fas fa-microphone-slash';
   document.getElementById('muteButton').classList.toggle('active');
 });
-
-// Camera On / Off
 document.getElementById('cameraButton').addEventListener('click', () => {
   const videoTrack = myStream.getVideoTracks()[0];
   videoTrack.enabled = !videoTrack.enabled;
@@ -93,8 +85,6 @@ document.getElementById('cameraButton').addEventListener('click', () => {
   icon.className = videoTrack.enabled ? 'fas fa-video' : 'fas fa-video-slash';
   document.getElementById('cameraButton').classList.toggle('active');
 });
-
-// End Call
 document.getElementById('endCallBtn').addEventListener('click', () => {
   for (let track of myStream.getTracks()) {
     track.stop();
