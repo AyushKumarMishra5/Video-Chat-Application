@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,29 +10,38 @@
   <script defer src="/socket.io/socket.io.js"></script>
   <script defer src="/script.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="room.css">
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       margin: 0;
-      background: linear-gradient(135deg, #0f172a, #1e3a8a);
       font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e3a8a);
       color: white;
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      height: 100vh;
       overflow: hidden;
     }
 
     header {
-      background-color: #1e293b;
+      background: rgba(30, 41, 59, 0.85);
+      backdrop-filter: blur(10px);
       padding: 15px 25px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      border-bottom: 2px solid #38bdf8;
+      z-index: 10;
     }
 
     header h1 {
       font-size: 18px;
-      margin: 0;
       display: flex;
       align-items: center;
       flex-wrap: wrap;
@@ -47,25 +57,29 @@
       padding: 20px;
       display: flex;
       flex-wrap: wrap;
-      gap: 20px;
       justify-content: center;
       align-items: center;
+      gap: 20px;
       overflow-y: auto;
+      scroll-behavior: smooth;
     }
 
     .video-card {
       position: relative;
-      background-color: #0f172a;
+      background: rgba(15, 23, 42, 0.8);
       border: 2px solid #38bdf8;
       border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 8px 20px rgba(56, 189, 248, 0.4);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 10px 20px rgba(56, 189, 248, 0.2);
+      transition: all 0.3s ease-in-out;
+      width: 100%;
+      max-width: 400px;
+      height: 280px;
     }
 
     .video-card:hover {
-      transform: scale(1.02);
-      box-shadow: 0 12px 25px rgba(56, 189, 248, 0.6);
+      transform: scale(1.03);
+      box-shadow: 0 12px 30px rgba(56, 189, 248, 0.5);
     }
 
     video {
@@ -76,24 +90,33 @@
     }
 
     .controls {
-      background-color: #1e293b;
-      padding: 15px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(30, 41, 59, 0.95);
+      backdrop-filter: blur(10px);
       display: flex;
       justify-content: center;
-      gap: 20px;
+      align-items: center;
+      padding: 12px 10px;
+      gap: 15px;
       flex-wrap: wrap;
+      z-index: 1000;
+      border-top: 2px solid #38bdf8;
+      box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.3);
     }
 
     .control-btn {
-      background-color: #334155;
-      color: white;
-      border: none;
+      background-color: transparent;
+      color: #38bdf8;
+      border: 2px solid #38bdf8;
       border-radius: 50%;
-      width: 50px;
-      height: 50px;
+      width: 52px;
+      height: 52px;
       font-size: 20px;
       cursor: pointer;
-      transition: 0.2s ease;
+      transition: all 0.3s ease;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -107,38 +130,41 @@
 
     .control-btn.active {
       background-color: #f43f5e;
+      color: white;
+      border-color: #f43f5e;
     }
 
     #endCallBtn {
       background-color: #ef4444;
-      border-radius: 20px;
+      border: none;
+      border-radius: 30px;
       padding: 10px 20px;
       font-size: 16px;
       color: white;
-      width: auto;
-      height: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background-color 0.3s ease;
     }
 
     #endCallBtn:hover {
       background-color: #dc2626;
     }
 
-    /* === Responsive Media Queries === */
-    @media (max-width: 1200px) {
+    @media (max-width: 1024px) {
       .video-card {
-        width: 350px;
-        height: 280px;
+        height: 240px;
       }
     }
 
     @media (max-width: 768px) {
-      .video-card {
-        width: 90vw;
-        height: 50vh;
-      }
-
       header h1 {
         font-size: 16px;
+      }
+
+      .video-card {
+        max-width: 90vw;
+        height: 45vh;
       }
 
       .control-btn {
@@ -154,26 +180,30 @@
     }
 
     @media (max-width: 480px) {
-      .video-card {
-        width: 95vw;
-        height: 45vh;
-      }
-
       header h1 {
         font-size: 14px;
         flex-direction: column;
         align-items: flex-start;
       }
 
+      .controls {
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px;
+      }
+
       .control-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
+        width: 42px;
+        height: 42px;
+        font-size: 17px;
       }
 
       #endCallBtn {
-        padding: 6px 14px;
-        font-size: 13px;
+        width: 100%;
+        max-width: 300px;
+        padding: 12px;
+        font-size: 15px;
+        justify-content: center;
       }
     }
   </style>
@@ -181,15 +211,25 @@
 
 <body>
   <header>
-    <h1><i class="fas fa-user-secret"></i> Anonymous Chat Room: <%= roomId %></h1>
+    <h1><i class="fas fa-user-secret"></i> Anonymous Chat Room: <%= roomId %>
+    </h1>
   </header>
 
   <div id="video-grid"></div>
 
-  <div class="controls">
-    <button id="muteButton" class="control-btn" title="Mute/Unmute"><i class="fas fa-microphone"></i></button>
-    <button id="cameraButton" class="control-btn" title="Camera On/Off"><i class="fas fa-video"></i></button>
-    <button id="endCallBtn" class="control-btn" title="End Call"><i class="fas fa-phone-slash"></i></button>
-  </div>
+  <footer class="controls">
+    <button id="muteButton" class="control-btn" title="Mute/Unmute">
+      <i class="fas fa-microphone"></i>
+    </button>
+    <button id="cameraButton" class="control-btn" title="Camera On/Off">
+      <i class="fas fa-video"></i>
+    </button>
+    <button id="endCallBtn" title="End Call">
+      <i class="fas fa-phone-slash"></i> <span class="end-text">End Call</span>
+    </button>
+  </footer>
+
+
 </body>
+
 </html>
