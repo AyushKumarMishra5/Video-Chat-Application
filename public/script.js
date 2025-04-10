@@ -13,6 +13,8 @@ navigator.mediaDevices.getUserMedia({
 }).then(stream => {
   myStream = stream;
   addVideoStream(myVideo, stream);
+  
+
   myPeer.on('call', call => {
     call.answer(stream);
     const video = document.createElement('video');
@@ -23,6 +25,8 @@ navigator.mediaDevices.getUserMedia({
       console.error('Error in received call:', err);
     });
   });
+
+  
   socket.on('user-connected', userId => {
     setTimeout(() => {
       connectToNewUser(userId, stream);
