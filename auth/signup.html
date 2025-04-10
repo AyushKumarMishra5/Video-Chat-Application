@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Signup - Video Chat App</title>
+  <link rel="stylesheet" href="signup.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="left-section">
+      <h1><i class="fas fa-video"></i> Video Chat App</h1>
+      <p>Connect with anyone, anywhere, anytime with our seamless, real-time video calling platform. Secure, fast, and free!</p>
+      <ul>
+        <li><i class="fas fa-check-circle"></i> HD Video & Audio</li>
+        <li><i class="fas fa-check-circle"></i> Private Rooms</li>
+        <li><i class="fas fa-check-circle"></i> Real-Time Chat</li>
+      </ul>
+    </div>
+
+    <div class="right-section">
+      <h2>Create an Account</h2>
+      <form id="signupForm">
+        <div class="input-group">
+          <label for="name">Name</label>
+          <input type="text" autocomplete="off" id="name" placeholder="Enter your name" required>
+        </div>
+        <div class="input-group">
+          <label for="email">Email</label>
+          <input type="email" autocomplete="off" id="email" placeholder="Enter your email" required>
+        </div>
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" autocomplete="off" id="password" placeholder="Create password" required>
+        </div>
+        <div class="input-group">
+          <label for="confirm-password">Confirm Password</label>
+          <input type="password" autocomplete="off" id="confirm-password" placeholder="Confirm password" required>
+        </div>
+        <button type="submit">Sign Up</button>
+        <p class="login-link">Already have an account? <a href="login.html">Log in</a></p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("signupForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const confirmPassword = document.getElementById("confirm-password").value.trim();
+
+      const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+      if (!name || !email || !password || !confirmPassword) {
+        alert("Please fill out all fields.");
+        return;
+      }
+
+      if (!emailPattern.test(email)) {
+        alert("Please enter a valid email.");
+        return;
+      }
+
+      if (password.length < 6) {
+        alert("Password must be at least 6 characters.");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        alert("Passwords do not match.");
+        return;
+      }
+      alert("Signup successful!");
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>
