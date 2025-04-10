@@ -104,8 +104,8 @@ io.on('connection', socket => {
   });
 });
 
-const Mongo_URL = process.env.MONGO_URL
-mongoose.connect(Mongo_URL)
+const MONGO_URL = process.env.MONGO_URL
+mongoose.connect(MONGO_URL)
   .then(() => console.log("Connected to the Database."))
   .catch((err) => console.log("Error connecting to the database", err))
 
