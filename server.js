@@ -6,14 +6,20 @@ const { v4: uuidV4 } = require('uuid');
 const mongoose = require('mongoose');
 const path = require('path');
 require('dotenv');
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(express.static(path.join(__dirname, 'auth')));
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 app.use(express.static('public'));
 
-app.get('/signup', (req, res)=>{
-  res.sendFile(path.join(__dirname, 'public', 'sgnup.html'))
+app.get('/', (req, res)=>{
+  res.sendFile(path.join(__dirname, 'auth', 'signup.html'))
+})
+
+app.get('/home', (req, res)=>{
+  res.render('home')
 })
 
 app.get('/room/:room', (req, res) => {
@@ -32,8 +38,6 @@ io.on('connection', socket => {
     });
   });
 });
-
-const MongoDB_URI = process.env.MongoDB_URI
 mongoose.connect("mongodb://localhost:27017/video")
 .then(()=> console.log("Connected to the Database."))
 .catch((err)=> console.log("Error connecting to the database", err))

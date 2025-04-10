@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,15 +10,15 @@
   <script defer src="/script.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="stylesheet" href="room.css">
+
   <style>
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
 
     body {
-      margin: 0;
       font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(135deg, #0f172a, #1e3a8a);
       color: white;
@@ -27,6 +26,7 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      transition: 0.4s ease;
     }
 
     header {
@@ -44,14 +44,12 @@
       font-size: 18px;
       display: flex;
       align-items: center;
-      flex-wrap: wrap;
     }
 
     header h1 i {
       margin-right: 10px;
       color: #38bdf8;
     }
-
     #video-grid {
       flex: 1;
       padding: 20px;
@@ -71,7 +69,7 @@
       border-radius: 20px;
       overflow: hidden;
       box-shadow: 0 10px 20px rgba(56, 189, 248, 0.2);
-      transition: all 0.3s ease-in-out;
+      transition: all 0.3s ease;
       width: 100%;
       max-width: 400px;
       height: 280px;
@@ -86,9 +84,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: block;
     }
-
     .controls {
       position: fixed;
       bottom: 0;
@@ -108,7 +104,7 @@
     }
 
     .control-btn {
-      background-color: transparent;
+      background: transparent;
       color: #38bdf8;
       border: 2px solid #38bdf8;
       border-radius: 50%;
@@ -137,20 +133,34 @@
     #endCallBtn {
       background-color: #ef4444;
       border: none;
-      border-radius: 30px;
-      padding: 10px 20px;
-      font-size: 16px;
+      border-radius: 50%;
+      width: 52px;
+      height: 52px;
       color: white;
+      font-size: 20px;
       display: flex;
       align-items: center;
-      gap: 8px;
-      transition: background-color 0.3s ease;
+      justify-content: center;
+      transition: background-color 0.3s ease, transform 0.3s ease;
     }
 
     #endCallBtn:hover {
       background-color: #dc2626;
+      transform: scale(1.1);
+    }
+    .nav-icon-btn {
+      background: transparent;
+      border: none;
+      color: #38bdf8;
+      font-size: 20px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
     }
 
+    .nav-icon-btn:hover {
+      transform: scale(1.2);
+      color: #0ea5e9;
+    }
     @media (max-width: 1024px) {
       .video-card {
         height: 240px;
@@ -158,24 +168,16 @@
     }
 
     @media (max-width: 768px) {
-      header h1 {
-        font-size: 16px;
-      }
-
       .video-card {
         max-width: 90vw;
         height: 45vh;
       }
 
-      .control-btn {
-        width: 45px;
-        height: 45px;
-        font-size: 18px;
-      }
-
+      .control-btn,
       #endCallBtn {
-        padding: 8px 16px;
-        font-size: 14px;
+        width: 46px;
+        height: 46px;
+        font-size: 18px;
       }
     }
 
@@ -192,27 +194,69 @@
         padding: 12px;
       }
 
-      .control-btn {
+      .control-btn,
+      #endCallBtn {
         width: 42px;
         height: 42px;
         font-size: 17px;
       }
+    }
+    body.light-theme {
+      background: linear-gradient(135deg, #ffffff, #e0f2fe);
+      color: #0f172a;
+    }
 
-      #endCallBtn {
-        width: 100%;
-        max-width: 300px;
-        padding: 12px;
-        font-size: 15px;
-        justify-content: center;
-      }
+    body.light-theme header {
+      background: rgba(224, 242, 254, 0.9);
+      border-bottom: 2px solid #0ea5e9;
+    }
+
+    body.light-theme header h1 i {
+      color: #0ea5e9;
+    }
+
+    body.light-theme .video-card {
+      background: rgba(255, 255, 255, 0.85);
+      border-color: #0ea5e9;
+    }
+
+    body.light-theme .controls {
+      background: rgba(224, 242, 254, 0.95);
+      border-top: 2px solid #0ea5e9;
+    }
+
+    body.light-theme .control-btn {
+      color: #0ea5e9;
+      border-color: #0ea5e9;
+    }
+
+    body.light-theme .control-btn:hover {
+      background-color: #0ea5e9;
+      color: white;
+    }
+
+    body.light-theme .control-btn.active {
+      background-color: #f43f5e;
+      border-color: #f43f5e;
+      color: white;
+    }
+
+    body.light-theme #endCallBtn {
+      background-color: #ef4444;
+    }
+
+    body.light-theme #endCallBtn:hover {
+      background-color: #dc2626;
     }
   </style>
 </head>
 
 <body>
   <header>
-    <h1><i class="fas fa-user-secret"></i> Anonymous Chat Room: <%= roomId %>
-    </h1>
+    <h1><i class="fas fa-user-secret"></i> Anonymous Video Chat Room ID: <%= roomId %></h1>
+    <button id="themeToggleBtn" class="nav-icon-btn" title="Toggle Theme">
+      <i class="fas fa-sun"></i>
+    </button>
   </header>
 
   <div id="video-grid"></div>
@@ -224,12 +268,39 @@
     <button id="cameraButton" class="control-btn" title="Camera On/Off">
       <i class="fas fa-video"></i>
     </button>
+    <button id="shareButton" class="control-btn" title="Share Screen">
+      <i class="fas fa-desktop"></i>
+    </button>
+    <button id="recordButton" class="control-btn" title="Record">
+      <i class="fas fa-circle"></i>
+    </button>
+    <button id="settingsButton" class="control-btn" title="Settings">
+      <i class="fas fa-cog"></i>
+    </button>
     <button id="endCallBtn" title="End Call">
-      <i class="fas fa-phone-slash"></i> <span class="end-text">End Call</span>
+      <i class="fas fa-phone-slash"></i>
     </button>
   </footer>
 
+  <script>
+    document.getElementById("themeToggleBtn").addEventListener("click", () => {
+      document.body.classList.toggle("light-theme");
+      const icon = document.getElementById("themeToggleBtn").querySelector("i");
+      icon.classList.toggle("fa-sun");
+      icon.classList.toggle("fa-moon");
+    });
 
+    document.getElementById("shareButton").addEventListener("click", () => {
+      alert("Screen sharing is not active yet.");
+    });
+
+    document.getElementById("recordButton").addEventListener("click", () => {
+      alert("Recording feature is not active yet.");
+    });
+
+    document.getElementById("settingsButton").addEventListener("click", () => {
+      alert("Settings are not active yet.");
+    });
+  </script>
 </body>
-
 </html>
