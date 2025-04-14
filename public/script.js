@@ -6,27 +6,36 @@ myVideo.muted = true;
 
 let myStream;
 const peers = {};
+const videoElements = new Map();
 
 navigator.mediaDevices.getUserMedia({
   video: true,
   audio: true
 }).then(stream => {
   myStream = stream;
-  addVideoStream(myVideo, stream);
-  
+  addVideoStream('me', myVideo, stream);
 
   myPeer.on('call', call => {
     call.answer(stream);
     const video = document.createElement('video');
+
     call.on('stream', userVideoStream => {
-      addVideoStream(video, userVideoStream);
+      if (!videoElements.has(call.peer)) {
+        addVideoStream(call.peer, video, userVideoStream);
+      }
     });
+
     call.on('error', err => {
       console.error('Error in received call:', err);
     });
+
+    call.on('close', () => {
+      removeVideoStream(call.peer);
+    });
+
+    peers[call.peer] = call;
   });
 
-  
   socket.on('user-connected', userId => {
     setTimeout(() => {
       connectToNewUser(userId, stream);
@@ -37,6 +46,7 @@ navigator.mediaDevices.getUserMedia({
 socket.on('user-disconnected', userId => {
   if (peers[userId]) {
     peers[userId].close();
+    removeVideoStream(userId);
     delete peers[userId];
   }
 });
@@ -50,11 +60,13 @@ function connectToNewUser(userId, stream) {
   const video = document.createElement('video');
 
   call.on('stream', userVideoStream => {
-    addVideoStream(video, userVideoStream);
+    if (!videoElements.has(userId)) {
+      addVideoStream(userId, video, userVideoStream);
+    }
   });
 
   call.on('close', () => {
-    video.parentElement?.remove();
+    removeVideoStream(userId);
   });
 
   call.on('error', err => {
@@ -64,7 +76,9 @@ function connectToNewUser(userId, stream) {
   peers[userId] = call;
 }
 
-function addVideoStream(video, stream) {
+function addVideoStream(userId, video, stream) {
+  if (videoElements.has(userId)) return;
+
   video.srcObject = stream;
   video.addEventListener('loadedmetadata', () => {
     video.play();
@@ -73,7 +87,17 @@ function addVideoStream(video, stream) {
   const card = document.createElement('div');
   card.classList.add('video-card');
   card.appendChild(video);
+
   videoGrid.appendChild(card);
+  videoElements.set(userId, card);
+}
+
+function removeVideoStream(userId) {
+  const card = videoElements.get(userId);
+  if (card) {
+    card.remove();
+    videoElements.delete(userId);
+  }
 }
 document.getElementById('muteButton').addEventListener('click', () => {
   const audioTrack = myStream.getAudioTracks()[0];
@@ -93,5 +117,6 @@ document.getElementById('endCallBtn').addEventListener('click', () => {
   for (let track of myStream.getTracks()) {
     track.stop();
   }
+  socket.disconnect();
   window.location.href = '/';
 });
