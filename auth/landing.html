@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Chat App</title>
+    <link rel="stylesheet" href="landing.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="logo"><i class="fas fa-video"></i> VideoChat</div>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#features">Features</a>
+            <a href="#contact">Contact</a>
+        </nav>
+        <div class="auth-buttons">
+            <a href="/login" class="btn-outline">Log In</a>
+            <a href="/signup" class="btn">Sign Up</a>
+        </div>
+    </header>
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Connect Instantly with Anyone</h1>
+            <p>Experience seamless HD video calls, real-time chat, and private rooms in one secure platform.</p>
+            <div class="hero-buttons">
+                <a href="/signup" class="btn">Get Started</a>
+                <a href="/login" class="btn-outline">Try Demo</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <i class="fas fa-video fa-10x video-icon"></i>
+        </div>
+          
+    </section>
+    <section class="features" id="features">
+        <h2>Why Choose VideoChat?</h2>
+        <div class="feature-cards">
+            <div class="card">
+                <i class="fas fa-video"></i>
+                <h3>HD Video & Audio</h3>
+                <p>Crystal-clear calls with zero interruptions — perfect for personal and professional use.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-lock"></i>
+                <h3>Private & Secure</h3>
+                <p>All calls are encrypted end-to-end to keep your conversations safe and private.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-users"></i>
+                <h3>Group Rooms</h3>
+                <p>Create or join private rooms for group meetings, classes, or friendly hangouts.</p>
+            </div>
+        </div>
+    </section>
+    <section class="contact" id="contact">
+        <h2>Stay Connected</h2>
+        <p>Enter your email to get updates, tips, and exclusive access to our features.</p>
+        <form action="#" class="contact-form">
+            <input type="email" placeholder="Your Email Address" required />
+            <button type="submit" class="btn">Connect</button>
+        </form>
+    </section>
+    <footer>
+        <p>&copy; 2025 VideoChat Inc. | Built with WebRTC</p>
+    </footer>
+
+</body>
+
+</html>
